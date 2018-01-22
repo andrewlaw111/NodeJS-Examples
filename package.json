@@ -23,8 +23,7 @@
     "express": "^4.16.2",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
-    "knex": "^0.14.2",
-    "pg": "^7.4.0",
+    "jsonfile": "^4.0.0",
     "require-dir": "^0.3.2"
   }
 }
