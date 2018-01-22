@@ -4,7 +4,6 @@ const knex = require('knex')(knexFile);
 
 describe("UserService ",()=>{
 
-    let redisClient;
     let userService;
     let example = {
         first_name: "John",
@@ -12,7 +11,7 @@ describe("UserService ",()=>{
         email: "john.doe@gmail.com"
     }
     beforeEach((done)=>{
-        userService = new UserService(knex,redisClient);
+        userService = new UserService(knex);
         knex('users').del().then(()=>done());
     });
 

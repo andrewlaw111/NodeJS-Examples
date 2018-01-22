@@ -4,11 +4,10 @@ const knex = require('knex')(knexFile);
 
 describe("GroupService ",()=>{
 
-    let redisClient;
     let groupService;
     let example = { name: "Group1"};
     beforeEach((done)=>{
-        groupService = new GroupService(knex,redisClient);
+        groupService = new GroupService(knex);
         knex('groups').del().then(()=>done());
     });
 
