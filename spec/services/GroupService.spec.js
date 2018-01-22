@@ -1,15 +1,16 @@
 const {GroupService} = require('../../services');
-const knexFile = require('../../knexfile')['testing'];
-const knex = require('knex')(knexFile);
+const JsonFile = require('../../stores/JsonFile');
 
 describe("GroupService ",()=>{
 
-    let redisClient;
     let groupService;
     let example = { name: "Group1"};
+    let file;
     beforeEach((done)=>{
-        groupService = new GroupService(knex,redisClient);
-        knex('groups').del().then(()=>done());
+        file = new JsonFile('groups-test.json');
+        groupService = new GroupService(file);
+        file.write((data)=>{ return {data:{groups:[]}}})
+            .then(()=> done());
     });
 
     it("should support create method",(done)=>{
@@ -63,4 +64,8 @@ describe("GroupService ",()=>{
         })
     });
 
+    afterAll((done)=>{
+        file.write((data)=>{ return {data:{groups:[]}}})
+            .then(()=> done());
+    });
 });

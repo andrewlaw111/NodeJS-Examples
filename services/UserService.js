@@ -16,7 +16,7 @@ module.exports = class UserService{
         return this.jsonFile.write((data)=>{
             user.id = this.nextId;
             this.nextId++;
-            data.users.append(user);
+            data.users.push(user);
             return {
                 id: user.id,
                 data:data
@@ -31,7 +31,7 @@ module.exports = class UserService{
                 return user.id != userId;
             });
             return {
-                id:user.id,
+                id:userId,
                 data:data
             }
         });
@@ -48,11 +48,15 @@ module.exports = class UserService{
         return this.jsonFile.write((data)=>{
                 let user = data.users.map((user)=>{
                     if(user.id == id){
-                        return newUser;
+                        return Object.assign(user,newUser);
                     }else{
                         return user;
                     }
                 })
+                return {
+                    id:id,
+                    data:data
+                }
             })
     }
 

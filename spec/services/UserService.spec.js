@@ -1,19 +1,20 @@
 const {UserService} = require('../../services');
-const knexFile = require('../../knexfile')['testing'];
-const knex = require('knex')(knexFile);
+const JsonFile = require('../../stores/JsonFile');
 
 describe("UserService ",()=>{
 
-    let redisClient;
     let userService;
     let example = {
         first_name: "John",
         last_name: "Doe",
         email: "john.doe@gmail.com"
     }
+    let file;
     beforeEach((done)=>{
-        userService = new UserService(knex,redisClient);
-        knex('users').del().then(()=>done());
+        file = new JsonFile('users-test.json');
+        userService = new UserService(file);
+        file.write((data)=>{ return {data:{users:[]}}})
+            .then(()=> done());
     });
 
     it("should support create method",(done)=>{
@@ -67,4 +68,8 @@ describe("UserService ",()=>{
         })
     });
 
+    afterAll((done)=>{
+        file.write((data)=>{ return {data:{users:[]}}})
+            .then(()=> done());
+    });
 });

@@ -13,8 +13,8 @@ module.exports = class JsonFile {
                 if (err) {
                     reject(err);
                 } else {
-                    result = transformer(data);
-                    jsonfile.writeFile(path.join(__dirname, this.fileName), result.data, (err) => {
+                    let result = transformer(data);
+                    jsonfile.writeFile(path.join(__dirname, this.fileName), result.data,{spaces: 2}, (err) => {
                         if (err) {
                             reject(err)
                         } else {

@@ -16,7 +16,7 @@ module.exports = class GroupService{
         return this.jsonFile.write((data)=>{
             group.id = this.nextId;
             this.nextId++;
-            data.groups.append(group);
+            data.groups.push(group);
             return {
                 id: group.id,
                 data:data
@@ -31,7 +31,7 @@ module.exports = class GroupService{
                 return group.id != groupId;
             });
             return {
-                id:group.id,
+                id:groupId,
                 data:data
             }
         });
@@ -48,11 +48,15 @@ module.exports = class GroupService{
         return this.jsonFile.write((data)=>{
                 let group = data.groups.map((group)=>{
                     if(group.id == id){
-                        return newGroup;
+                        return Object.assign(group,newGroup);
                     }else{
                         return group;
                     }
-                })
+                });
+                return {
+                    id:id,
+                    data:data
+                }
             })
     }
 
