@@ -1,40 +1,72 @@
 
-
-const USERS = require("./tables").USERS;
-
 module.exports = class UserService{
 
-    constructor(knex,redisClient){
-        this.knex = knex;
-        this.redisClient = redisClient;
+    constructor(jsonFile){
+        jsonFile.read((data)=>{
+            let maxId = data.users.reduce((maxId,user)=>{
+                return maxId > user.id ? maxId: user.id
+            },0);
+            this.nextId = maxId++;
+        });
+        this.jsonFile = jsonFile;
     }
+    
 
     create(user){
-        // Validation logic
-        return this.knex.insert(user).into(USERS).returning("id");
+        return this.jsonFile.write((data)=>{
+            user.id = this.nextId;
+            this.nextId++;
+            data.users.append(user);
+            return {
+                id: user.id,
+                data:data
+            }
+        });
     }
 
 
     delete(userId){
-        return this.knex(USERS).where("id",userId).del();
+        return this.jsonFile.write((data)=>{
+            data.users = data.users.filter((user)=>{
+                return user.id != userId;
+            });
+            return {
+                id:user.id,
+                data:data
+            }
+        });
     }
 
 
     list(limit=100,offset=0){
-        return this.knex.select("*")
-                    .from(USERS)
-                    .limit(limit).offset(offset);
+        return this.jsonFile.read((data)=>{
+                return data.users;
+            })
     }
 
-    update(id,user){
-        return this.knex(USERS)
-                    .update(user)
-                    .where("id",id);
+    update(id,newUser){
+        return this.jsonFile.write((data)=>{
+                let user = data.users.map((user)=>{
+                    if(user.id == id){
+                        return newUser;
+                    }else{
+                        return user;
+                    }
+                })
+            })
     }
 
     search(searchCriteria,limit=100,offset=0){
-        return this.knex.select("*").from(USERS)
-                    .where(searchCriteria)
-                    .limit(limit).offset(offset);
+        return this.jsonFile.read((data)=>{
+                data.users.filter((user)=>{
+                    for(let criterion in searchCriteria){
+                        if(searchCriteria[criterion] != user[criterion]){
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+                return data.users;
+            });
     }
 }

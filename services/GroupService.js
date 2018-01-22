@@ -1,39 +1,72 @@
 
-
-const GROUPS = require("./tables").GROUPS;
-
 module.exports = class GroupService{
 
-    constructor(knex,redisClient){
-        this.knex = knex;
-        this.redisClient = redisClient;
+    constructor(jsonFile){
+        jsonFile.read((data)=>{
+            let maxId = data.groups.reduce((maxId,group)=>{
+                return maxId > group.id ? maxId: group.id
+            },0);
+            this.nextId = maxId++;
+        });
+        this.jsonFile = jsonFile;
     }
+    
 
     create(group){
-        return this.knex.insert(group).into(GROUPS).returning("id");
+        return this.jsonFile.write((data)=>{
+            group.id = this.nextId;
+            this.nextId++;
+            data.groups.append(group);
+            return {
+                id: group.id,
+                data:data
+            }
+        });
     }
 
 
     delete(groupId){
-        return this.knex(GROUPS).where("id",groupId).del();
+        return this.jsonFile.write((data)=>{
+            data.groups = data.groups.filter((group)=>{
+                return group.id != groupId;
+            });
+            return {
+                id:group.id,
+                data:data
+            }
+        });
     }
 
 
     list(limit=100,offset=0){
-        return this.knex.select("*")
-                    .from(GROUPS)
-                    .limit(limit).offset(offset);
+        return this.jsonFile.read((data)=>{
+                return data.groups;
+            })
     }
 
-    update(id,group){
-        return this.knex(GROUPS)
-                    .update(group)
-                    .where("id",id);
+    update(id,newGroup){
+        return this.jsonFile.write((data)=>{
+                let group = data.groups.map((group)=>{
+                    if(group.id == id){
+                        return newGroup;
+                    }else{
+                        return group;
+                    }
+                })
+            })
     }
 
     search(searchCriteria,limit=100,offset=0){
-        return this.knex.select("*").from(GROUPS)
-                    .where(searchCriteria)
-                    .limit(limit).offset(offset);
+        return this.jsonFile.read((data)=>{
+                data.groups.filter((group)=>{
+                    for(let criterion in searchCriteria){
+                        if(searchCriteria[criterion] != group[criterion]){
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+                return data.groups;
+            });
     }
 }

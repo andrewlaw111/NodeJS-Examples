@@ -11,8 +11,10 @@ const { GroupRouter,
 const { GroupService,
         UserService} = require('./services');
 
-let groupService = new GroupService(knex);
-let userService = new UserService(knex);
+const JsonFile = require('./stores/JsonFile');
+
+let groupService = new GroupService(new JsonFile('groups.json'));
+let userService = new UserService(new JsonFile('users.json'));
 
 const {app} = require('./utils/init-app')();
 
