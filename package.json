@@ -1,34 +1,30 @@
 {
-  "name": "knex-express",
+  "name": "NodeJS-Examples",
   "version": "1.0.0",
-  "description": "An example of using Knex the SQL builder with Express framework.",
+  "description": "NodeJS Examples for Accelerate Curriculum",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/acceleratehk/knex-express.git"
+    "url": "git+https://github.com/acceleratehk/NodeJS-Examples.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/acceleratehk/knex-express/issues"
+    "url": "https://github.com/acceleratehk/NodeJS-Examples/issues"
   },
-  "homepage": "https://github.com/acceleratehk/knex-express#readme",
+  "homepage": "https://github.com/acceleratehk/NodeJS-Examples#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "connect-redis": "^3.3.3",
+    "cookie-session": "^2.0.0-beta.3",
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
     "knex": "^0.14.2",
-    "passport": "^0.4.0",
-    "passport-facebook": "^2.1.1",
     "pg": "^7.4.0",
-    "require-dir": "^0.3.2",
-    "socket.io": "^2.0.4",
-    "socket.io.session": "^1.0.13"
+    "require-dir": "^0.3.2"
   }
 }
